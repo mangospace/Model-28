@@ -744,9 +744,18 @@ def prop28_impact(memberfile):
 
 
 if uploaded_file is not None:           
+    x = re.search("\.", uploaded_file)
+    file_extension= uploaded_file[x.start()+1:len(uploaded_file)]
 
+    if file_extension == 'xlsx':
+        prodfeat = pd.read_excel(uploaded_file.read(), engine='openpyxl')
+    elif file_extension == 'xls':
+        prodfeat = pd.read_excel(uploaded_file.read())
+    elif file_extension == 'csv':
+        prodfeat = pd.read_csv(uploaded_file.read())
+       
     # Can be used wherever a "file-like" object is accepted:
-    prodfeat = pd.read_excel(uploaded_file)
+#    prodfeat = pd.read_excel(uploaded_file)
     prodfeat= prodfeat.rename(columns = {'Column 2':'ICD10','Column 1':'SUBSCRIBER_ID'})
     prodfeat= prodfeat[prodfeat['ICD10'] != "MOR"]
     prodfeat['ICD10']=prodfeat['ICD10'].str.strip()
