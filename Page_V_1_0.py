@@ -745,8 +745,9 @@ def prop28_impact(memberfile):
 
 if uploaded_file is not None:           
     x = re.search("\.", uploaded_file)
+    print(x)
+    print(x.start())
     file_extension= uploaded_file[x.start()+1:len(uploaded_file)]
-
     if file_extension == 'xlsx':
         prodfeat = pd.read_excel(uploaded_file.read(), engine='openpyxl')
     elif file_extension == 'xls':
