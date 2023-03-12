@@ -743,31 +743,7 @@ def prop28_impact(memberfile):
     return prodf23
 
 
-if uploaded_file is not None:
-    # To read file as bytes:
-    #bytes_data = uploaded_file.getvalue()
-    #st.caption(bytes_data)
-    
-    excelSigs = [
-        ('xlsx', b'\x50\x4B\x05\x06', 2, -22, 4),
-        ('xls', b'\x09\x08\x10\x00\x00\x06\x05\x00', 0, 512, 8),  #Saved from Excel
-    ]
-
-    for sigType, sig, whence, offset, size in excelSigs:
-        with open(uploaded_file.name, 'rb') as f:
-            f.seek(offset, whence) # Seek to the offset.
-            bytes = f.read(size)   # Capture the specified number of bytes.
-#            st.caption("filename:", uploaded_file.name)   
- #           st.caption (codecs.getencoder('hex')(bytes))
-    
-            if bytes == excelSigs[1][1]:
-                msg = '"{}" is an xls.'
-            elif bytes == excelSigs[0][1]:
-                msg = '"{}" is an xlsx.'
-            else:
-                msg = '"{}" is not an Excel document.'
-#            st.caption (msg.format)
-            
+if uploaded_file is not None:           
 
     # Can be used wherever a "file-like" object is accepted:
     prodfeat = pd.read_excel(uploaded_file)
@@ -776,7 +752,7 @@ if uploaded_file is not None:
     prodfeat['ICD10']=prodfeat['ICD10'].str.strip()
  
 
-    memberfile=prodfeat
+#    memberfile=prodfeat
 
     if option=='2023 Model 24':  
         prodf23=prop24_impact(prodfeat)
