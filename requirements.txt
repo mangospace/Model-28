@@ -1,0 +1,7 @@
+streamlit=1.19.0
+openpyxl=3.0.10
+plotnine=0.10.1
+pandas=1.5.2
+numpy=1.23.5
+regex=2022.7.9
+plotnine=0.10.1
