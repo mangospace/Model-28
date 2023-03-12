@@ -58,7 +58,7 @@ def prop24_impact(memberfile):
         #V2423 ICD10-CC mapping
         st.caption("Reading ICD10-CC mapping in Model 24.")
 #        icd10_cc24=pd.read_csv("https://raw.githubusercontent.com/mangospace/Model-28/main/CMS-HCC%20software%20V2423.86.P1/F2423P1M.TXT", sep='	', header=None, names=['CC_24', 'Column2'], skipinitialspace = True)
-        icd10_cc24=pd.read_csv("https://raw.githubusercontent.com/mangospace/Model-28/main/CMS-HCC%20software%20V2423.86.P1/V2423P1M.TXT", sep='	', header=None, names=['CC_24', 'Column2'], skipinitialspace = True)
+        icd10_cc24=pd.read_csv("https://raw.githubusercontent.com/mangospace/Model-28/main/CMS-HCC%20software%20V2423.86.P1/F2423P1M.TXT", sep='	', header=None, names=['CC_24', 'Column2'], skipinitialspace = True)
 
         icd10_cc24.reset_index(inplace=True)
         icd10_cc24['CC_24'].astype(int)
