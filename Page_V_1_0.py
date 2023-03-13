@@ -497,7 +497,7 @@ def prop28_impact(memberfile):
         
         
         #apply heirarhcy
-        create_hcc_frm_cc=pd.read_csv(r"https://raw.githubusercontent.com/mangospace/Model-28/main/Model%2028%20software\V28115H1.TXT", sep="   , HIER=%STR", header=None, names=['top_CC', 'trump_HCC'], skiprows=30, skipinitialspace = True, skipfooter=1)
+        create_hcc_frm_cc=pd.read_csv(r"https://raw.githubusercontent.com/mangospace/Model-28/main/Model%2028%20software/V28115H1.TXT", sep="   , HIER=%STR", header=None, names=['top_CC', 'trump_HCC'], skiprows=30, skipinitialspace = True, skipfooter=1)
         create_hcc_frm_cc['top_CC']=create_hcc_frm_cc['top_CC'].str.replace(".+\W[\s+]?\%SET0\(CC\=", '', regex=True)
         #create_hcc_frm_cc['top_CC'].head(35)
         create_hcc_frm_cc['trump_HCC']=create_hcc_frm_cc['trump_HCC'].str.replace("\W\)\)\;|\(",'',regex=True)
