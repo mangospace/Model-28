@@ -15,6 +15,7 @@ import regex as re
 import plotnine as p9
 import time
 import urllib
+import xlrd
 
 #from io import StringIO
 
