@@ -182,10 +182,10 @@ def prop24_impact(memberfile):
         for line in file1:
             count+= 1
 #            st.caption("Line{}: {}".format(count, line.strip()))
-            x = re.search("\%\*imposing hierarchies\;", line)
+            x = re.search("\%\*imposing hierarchies\;", line.decode('utf-8'))
             if x:
                 skiprowcnt=count    
-            y = re.search("\%MEND V24H86H1", line)
+            y = re.search("\%MEND V24H86H1", line.decode('utf-8'))
             if y:
                 lastrowcnt=count    
         skipftcnt=count-lastrowcnt+1
