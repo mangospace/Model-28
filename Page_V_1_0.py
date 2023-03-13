@@ -17,8 +17,6 @@ import time
 import urllib
 import xlrd
 
-#from io import StringIO
-
 st.title('Performance Year 2024 HCC RAF Model Change Impact V0.0')
 st.caption('Made with \u2764\uFE0F @manas8u in Python and Streamlit')
 st.caption('Understand the somewhat \U0001F479 nature of this version')
@@ -27,9 +25,10 @@ st.caption('Please share your feedback and suggestions. DM @manas8u')
 This model will allow you to compare the impact of the CMS RAF Model 28 community dwelling beneficiaries (proposed payment year 2024) compared to Model 24 (payment year 2023).
 - This model takes time to run. For ~10,000 members, the model can take 2-3 mins. Please do not refresh. 
 - If you are analyzing data on more than 10,000 members I would suggest using one model at a time first.
-- Please ensure there are only two columns in the member file that you upload.Column 1: Unique patient identifier(synthetic) Column 2: ICD10 that were captured in 2022
+- Please ensure that there are only two columns in the member file that you upload. The columns can have any name.
+- Column 1: Unique patient identifier (please dont share HIPPA protected identifiers) 
+- Column 2: ICD10s that were captured in 2022
 """
-
     
 uploaded_file = st.file_uploader("Choose a xls or xlxs file")
 
