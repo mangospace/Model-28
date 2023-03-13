@@ -14,7 +14,7 @@ import numpy as np
 import regex as re
 import plotnine as p9
 import time
-#import urllib
+import urllib
 import xlrd
 from io import StringIO
 import requests
