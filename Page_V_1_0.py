@@ -44,7 +44,7 @@ def prop24_impact(memberfile):
     
         new_title = '<p style="font-family:sans-serif; color:Black; font-size: 30px;">Running CMS-HCC RAF Model 24</p>'
         st.markdown(new_title, unsafe_allow_html=True)
-    #2023 model 
+        #2023 model 
         #V2423 HCC names
         st.caption("Reading HCC names in Model 24.")
         hcc_name24=pd.read_csv(r"https://raw.githubusercontent.com/mangospace/Model-28/main/CMS-HCC%20software%20V2423.86.P1/V24H86L1.TXT", sep=' =', header=None, names=['HCC', 'HCC_name_24'], skiprows=6, skipinitialspace = True)
@@ -57,7 +57,6 @@ def prop24_impact(memberfile):
        
         #V2423 ICD10-CC mapping
         st.caption("Reading ICD10-CC mapping in Model 24.")
-#        icd10_cc24=pd.read_csv("https://raw.githubusercontent.com/mangospace/Model-28/main/CMS-HCC%20software%20V2423.86.P1/F2423P1M.TXT", sep='	', header=None, names=['CC_24', 'Column2'], skipinitialspace = True)
         icd10_cc24=pd.read_csv("https://raw.githubusercontent.com/mangospace/Model-28/main/CMS-HCC%20software%20V2423.86.P1/F2423P1M.TXT", sep='	', header=None, names=['CC_24', 'Column2'], skipinitialspace = True)
 
         icd10_cc24.reset_index(inplace=True)
@@ -79,8 +78,7 @@ def prop24_impact(memberfile):
         #Read the Model 24-2023 HCC_weight mapping
         st.caption("Reading RAF weights for HCCs in Model 24.")
         
-        #hcc_weight24= r"https://raw.githubusercontent.com/mangospace/Model-28/main/CMS-HCC%20software%20V2423.86.P1/HCCv24.xlsx"
-        hcc_weight24= r"https://github.com/mangospace/Model-28/blob/05aacb6a795c259ab1d14d8397dacc89bd5744c5/CMS-HCC%20software%20V2423.86.P1/HCCv24.xlsx"
+        hcc_weight24= r"https://github.com/mangospace/Model-28/blob/05aacb6a795c259ab1d14d8397dacc89bd5744c5/CMS-HCC%20software%20V2423.86.P1/HCCv24.xlsx?raw=true"
         #Read the ICD10_HCC mapping
         hcc_wt24=pd.read_excel(hcc_weight24,sheet_name='transpose',names=['HCCname', 'RAF'],header=None, engine='openpyxl')  
         #hcc_wtdf['HCC']= hcc_wtdf['HCCname'].str[7:] 
@@ -563,7 +561,7 @@ def prop28_impact(memberfile):
         
         #Read the HCC_weight mapping
         st.caption("Reading RAF weights for HCCs in Model 28.")
-        hcc_weight= r'https://github.com/mangospace/Model-28/blob/3ad4f99c34dce18406f6f202461a8f0b1becd4c4/Model%2028%20software/Coefficients%20HCC%20V28.xlsx'
+        hcc_weight= r'https://github.com/mangospace/Model-28/blob/05aacb6a795c259ab1d14d8397dacc89bd5744c5/Model%2028%20software/Coefficients%20HCC%20V28.xlsx?raw=true'
         #Read the ICD10_HCC mapping
         hcc_wtdf=pd.read_excel(hcc_weight,sheet_name='transpose',names=['HCCname', 'RAF'])  
         #create numeric values to represent interaction terms inline with other HCCs
