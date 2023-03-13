@@ -437,7 +437,7 @@ def prop28_impact(memberfile):
     
     #create hcc names
     st.caption("Reading ICD10-CC mapping in Model 28.")
-    hcc_name=pd.read_csv(r"https://raw.githubusercontent.com/mangospace/Model-28/main/Model%2028%20software\V28115L3.TXT", sep=' =', header=None, names=['HCC', 'HCC_name'], skiprows=6, skipinitialspace = True)
+    hcc_name=pd.read_csv(r"https://raw.githubusercontent.com/mangospace/Model-28/main/Model%2028%20software/V28115L3.TXT", sep=' =', header=None, names=['HCC', 'HCC_name'], skiprows=6, skipinitialspace = True)
     hcc_name['HCC_name']=hcc_name['HCC_name'].str.replace(r'"', '')
     deletelist=['%MEND V28115L3;',';']
     hcc_name=(hcc_name[hcc_name.HCC.isin(deletelist) == False])
