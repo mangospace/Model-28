@@ -755,8 +755,8 @@ if uploaded_file is not None:
         prodfeat = pd.read_csv(uploaded_file.read())
        
     # Can be used wherever a "file-like" object is accepted:
-#    prodfeat = pd.read_excel(uploaded_file)
-    prodfeat= prodfeat.rename(columns = {'Column 2':'ICD10','Column 1':'SUBSCRIBER_ID'})
+#    prodfeat = pd.read_excel(uploaded_file, names=['ICD10','SUBSCRIBER_ID'])
+#prodfeat= prodfeat.rename(columns = {'Column 2':'ICD10','Column 1':'SUBSCRIBER_ID'})
 #    prodfeat= prodfeat[prodfeat['ICD10'] != "MOR"]
     prodfeat['ICD10']=prodfeat['ICD10'].str.strip()
  
