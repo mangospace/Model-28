@@ -744,16 +744,14 @@ def prop28_impact(memberfile):
 
 
 if uploaded_file is not None:           
-    x = re.search("\.", uploaded_file)
-    print(x)
-    print(x.start())
-    file_extension= uploaded_file[x.start()+1:len(uploaded_file)]
+    x = re.search("\.", uploaded_file.name)
+    file_extension= uploaded_file.name[x.start()+1:len(uploaded_file.name)]
     if file_extension == 'xlsx':
-        prodfeat = pd.read_excel(uploaded_file.read(), engine='openpyxl')
+        prodfeat = pd.read_excel(uploaded_file.name.read(), engine='openpyxl')
     elif file_extension == 'xls':
-        prodfeat = pd.read_excel(uploaded_file.read())
+        prodfeat = pd.read_excel(uploaded_file.name.read())
     elif file_extension == 'csv':
-        prodfeat = pd.read_csv(uploaded_file.read())
+        prodfeat = pd.read_csv(uploaded_file.name.read())
        
     # Can be used wherever a "file-like" object is accepted:
 #    prodfeat = pd.read_excel(uploaded_file)
