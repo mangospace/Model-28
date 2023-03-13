@@ -176,7 +176,8 @@ def prop24_impact(memberfile):
             prodf2_24[x]= prodf2_24[x].replace('-1', np.nan)
         
         st.caption("Creating and applying HCC model hierarchies.")
-        file1 = open("https://raw.githubusercontent.com/mangospace/Model-28/main/CMS-HCC%20software%20V2423.86.P1/V24H86H1.TXT", 'r')
+        target_url=r"https://raw.githubusercontent.com/mangospace/Model-28/main/CMS-HCC%20software%20V2423.86.P1/V24H86H1.TXT"
+        file1 = urllib.request.urlopen(target_url)
         count= 0
         for line in file1:
             count+= 1
