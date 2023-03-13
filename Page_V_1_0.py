@@ -78,8 +78,8 @@ def prop24_impact(memberfile):
         
         #Read the Model 24-2023 HCC_weight mapping
         st.caption("Reading RAF weights for HCCs in Model 24.")
-#        hcc_weight24= r"https://raw.githubusercontent.com/mangospace/Model-28/main/CMS-HCC%20software%20V2423.86.P1/HCCv24.xlsx"
-        hcc_weight24= r"https://github.com/mangospace/Model-28/blob/a0c97ca52cd64af42d79463ee1dca1d98d16be48/CMS-HCC%20software%20V2423.86.P1/HCCv24.xlsx"
+        hcc_weight24= r"https://raw.githubusercontent.com/mangospace/Model-28/main/CMS-HCC%20software%20V2423.86.P1/HCCv24.xlsx"
+        hcc_weight24= r"https://github.com/mangospace/Model-28/blob/05aacb6a795c259ab1d14d8397dacc89bd5744c5/CMS-HCC%20software%20V2423.86.P1/HCCv24.xlsx"
         #Read the ICD10_HCC mapping
         hcc_wt24=pd.read_excel(hcc_weight24,sheet_name='transpose',names=['HCCname', 'RAF'],header=None, engine='openpyxl')  
         #hcc_wtdf['HCC']= hcc_wtdf['HCCname'].str[7:] 
