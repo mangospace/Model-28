@@ -14,8 +14,10 @@ import numpy as np
 import regex as re
 import plotnine as p9
 import time
-import urllib
+#import urllib
 import xlrd
+from io import StringIO
+import requests
 
 st.title('Performance Year 2024 HCC RAF Model Change Impact V0.0')
 st.caption('Made with \u2764\uFE0F @manas8u in Python and Streamlit')
@@ -423,7 +425,10 @@ def prop28_impact(memberfile):
     st.markdown(new_title, unsafe_allow_html=True)
 
     st.caption("Reading HCC names in Model 28.")
-    icd10_cc=pd.read_csv("https://raw.githubusercontent.com/mangospace/Model-28/main/Model%2028%20software/F2823T2N_FY22FY23.TXT", sep='	', header=None, names=['CC', 'Column2'], skipinitialspace = True)
+    url="https://raw.githubusercontent.com/mangospace/Model-28/main/Model%2028%20software/F2823T2N_FY22FY23.TXT"
+    response = requests.get(url)
+    csvStringIO = StringIO(response.text)
+    icd10_cc=pd.read_csv(csvStringIO, sep='	', header=None, names=['CC', 'Column2'], skipinitialspace = True)
     icd10_cc.reset_index(inplace=True)
     icd10_cc['CC'].astype(int)
     icd10_cc= icd10_cc.rename(columns = {'index':'ICD10'})
