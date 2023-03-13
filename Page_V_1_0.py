@@ -747,7 +747,7 @@ if uploaded_file is not None:
     x = re.search("\.", uploaded_file.name)
     file_extension= uploaded_file.name[x.start()+1:len(uploaded_file.name)]
     if file_extension == 'xlsx':
-        prodfeat = pd.read_excel(uploaded_file.name., engine='openpyxl')
+        prodfeat = pd.read_excel(uploaded_file.name, engine='openpyxl')
     elif file_extension == 'xls':
         prodfeat = pd.read_excel(uploaded_file.name)
     elif file_extension == 'csv':
