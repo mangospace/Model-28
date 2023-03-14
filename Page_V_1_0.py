@@ -763,7 +763,8 @@ if uploaded_file is not None:
     prodfeat = pd.read_excel(uploaded_file, names=['SUBSCRIBER_ID','ICD10'])
     st.caption(prodfeat.columns) 
     prodfeat['ICD10']=prodfeat['ICD10'].str.strip()
-
+    segment= optiondict[option1]
+    
     if option1 !='':                                 
         if option=='2023 Model 24':  
             prodf23=prop24_impact(prodfeat)
