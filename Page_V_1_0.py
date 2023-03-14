@@ -243,7 +243,7 @@ def prop24_impact(memberfile):
             sepsis_24       = ['2']
             arry_24         =['96'] 
             gsubstanceusedisorder_24 = ['54', '55', '56']
-            gpsychiatric_24   = ['57', '58', '59', '60
+            gpsychiatric_24   = ['57', '58', '59', '60']
             
             for i in range(len(prodf2_24)): # how many rows to review from the list of disease
                 for y in range(len(d1)): # how many heirarchies to traverse
