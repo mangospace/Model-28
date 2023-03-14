@@ -763,41 +763,41 @@ if uploaded_file is not None:
     st.caption(prodfeat.columns) 
     prodfeat['ICD10']=prodfeat['ICD10'].str.strip()
     segment= optiondict[option1]
-    
-        if option=='2023 Model 24':  
+
+    if option=='2023 Model 24':  
+        if option1 != '':
+            prodf23=prop24_impact(prodfeat)
+
+    if option=='Proposed 2024 Model 28':  
+        if option1 != '':
+            prodf23_24=prop28_impact(prodfeat)
+
+    if option=='Both Models':  
             if option1 != '':
                 prodf23=prop24_impact(prodfeat)
-
-        if option=='Proposed 2024 Model 28':  
-            if option1 != '':
                 prodf23_24=prop28_impact(prodfeat)
 
-        if option=='Both Models':  
-                if option1 != '':
-                    prodf23=prop24_impact(prodfeat)
-                    prodf23_24=prop28_impact(prodfeat)
-
-                    new_title = '<p style="font-family:sans-serif; color:Black; font-size: 30px;">Distribution of Number of HCCs in the population based on CMS-HCC RAF Model 24 and Model 28</p>'
-                    st.markdown(new_title, unsafe_allow_html=True)
+                new_title = '<p style="font-family:sans-serif; color:Black; font-size: 30px;">Distribution of Number of HCCs in the population based on CMS-HCC RAF Model 24 and Model 28</p>'
+                st.markdown(new_title, unsafe_allow_html=True)
 
 
-                    prodfnew = pd.concat([prodf23_24, prodf23], ignore_index=True)
-                    prodfnew.Model=prodfnew.Model.astype("category")
-                    p=(p9.ggplot(prodfnew) + p9.aes(x="rafcount", fill="Model")  + p9.geom_bar(stat='count', position='dodge')
-                    + p9.xlab("Number of HCC conditions") + p9.ylab("Number of beneficiaries")
-                    + p9.geom_text(
-                        p9.aes(label=p9.after_stat('count')),
-                        stat='count',
-                        nudge_y=0.125,
-                        va='bottom')
-                    )
+                prodfnew = pd.concat([prodf23_24, prodf23], ignore_index=True)
+                prodfnew.Model=prodfnew.Model.astype("category")
+                p=(p9.ggplot(prodfnew) + p9.aes(x="rafcount", fill="Model")  + p9.geom_bar(stat='count', position='dodge')
+                + p9.xlab("Number of HCC conditions") + p9.ylab("Number of beneficiaries")
+                + p9.geom_text(
+                    p9.aes(label=p9.after_stat('count')),
+                    stat='count',
+                    nudge_y=0.125,
+                    va='bottom')
+                )
 
-                    st.pyplot(p9.ggplot.draw(p))      
-                    st.caption("Same plot as above but without the labels")
-                    p=(p9.ggplot(prodfnew) + p9.aes(x="rafcount", fill="Model")  + p9.geom_bar(stat='count', position='dodge')
-                    + p9.xlab("Number of HCC conditions") + p9.ylab("Number of beneficiaries")
-                    )
+                st.pyplot(p9.ggplot.draw(p))      
+                st.caption("Same plot as above but without the labels")
+                p=(p9.ggplot(prodfnew) + p9.aes(x="rafcount", fill="Model")  + p9.geom_bar(stat='count', position='dodge')
+                + p9.xlab("Number of HCC conditions") + p9.ylab("Number of beneficiaries")
+                )
 
-                    st.pyplot(p9.ggplot.draw(p))    
+                st.pyplot(p9.ggplot.draw(p))    
 
 
