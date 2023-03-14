@@ -38,6 +38,28 @@ option = st.selectbox(
     'Which model would you like to run?',
     ('Select', '2023 Model 24', 'Proposed 2024 Model 28', 'Both Models'))
 
+option1 = st.selectbox(
+    'Which Medicare Advantage population segment do these members belong to?',
+    ('Select', 
+"Community NonDual Aged",
+"Community NonDual Disabled",
+"Community FBDual Aged",
+"Community FBDual Disabled",
+"Community PBDual Aged",
+"Community PBDual Disabled"
+))
+
+#option1="Community FBDual Disabled"
+
+optiondict={
+"Community NonDual Aged":"CNA",
+"Community NonDual Disabled":"CND",
+"Community FBDual Aged":"CFA",
+"Community FBDual Disabled":"CFD",
+"Community PBDual Aged":"CPA",
+"Community PBDual Disabled":"CPD"   
+    }
+
 excelSigs = [
     ('xlsx', b'\x50\x4B\x05\x06', 2, -22, 4),
     ('xls', b'\x09\x08\x10\x00\x00\x06\x05\x00', 0, 512, 8),  #Saved from Excel
@@ -84,29 +106,24 @@ def prop24_impact(memberfile):
         hcc_weight24= r"https://github.com/mangospace/Model-28/blob/05aacb6a795c259ab1d14d8397dacc89bd5744c5/CMS-HCC%20software%20V2423.86.P1/HCCv24.xlsx?raw=true"
         #Read the ICD10_HCC mapping
         hcc_wt24=pd.read_excel(hcc_weight24,sheet_name='transpose',names=['HCCname', 'RAF'],header=None, engine='openpyxl')  
-        #hcc_wtdf['HCC']= hcc_wtdf['HCCname'].str[7:] 
         
         #create numeric values to represent interaction terms inline with other HCCs
-        conditions = [
-        (hcc_wt24['HCCname'] == 'CNA_HCC47_gCancer'),
-        (hcc_wt24['HCCname'] == 'CNA_DIABETES_CHF'),
-        (hcc_wt24['HCCname'] == 'CNA_CHF_gCopdCF'),
-        (hcc_wt24['HCCname'] == 'CNA_HCC85_gRenal_V24'),
-        (hcc_wt24['HCCname'] == 'CNA_gCopdCF_CARD_RESP_FAIL'),
-        (hcc_wt24['HCCname'] == 'CNA_HCC85_HCC96'),
-        (hcc_wt24['HCCname'] == 'gSubstanceUseDisorder_gPsych')
-        
-        ]
-        values = ['CNA_HCC1001', 'CNA_HCC1002', 'CNA_HCC1003', 'CNA_HCC1004', 'CNA_HCC1005', 'CNA_HCC1006','CNA_HCC1007' ]
-        hcc_wt24['HCCname1'] = np.select(conditions, values)
 
-        hcc_wt24['HCCname2'] = np.where(hcc_wt24['HCCname1']!= "0", hcc_wt24['HCCname1'], hcc_wt24['HCCname'])
-        hcc_wt24=hcc_wt24.drop(columns=['HCCname'])
-
-        hcc_wt24['number']= hcc_wt24['HCCname2'].str.extract('(\d+)')
-        hcc_wt24['HCC']= hcc_wt24['HCCname2'].str[4:] 
-        hcc_wt24['segments']= hcc_wt24['HCCname2'].str[:3] 
+        interdict={'HCC47_gCancer':'HCC1001',
+           'DIABETES_CHF': 'HCC1002',
+           'CHF_gCopdCF':'HCC1003',
+           'HCC85_gRenal_V24':'HCC1004',
+           'gCopdCF_CARD_RESP_FAIL':'HCC1005',
+           'HCC85_HCC96':'HCC1006',
+           'gSubstanceUseDisorder_gPsych':'HCC1007'
+           }
         
+        for key in interdict:
+            hcc_wt24.HCCname= hcc_wt24.HCCname.str.replace(key, interdict[key], regex=False)
+               
+        hcc_wt24['segments']= hcc_wt24['HCCname'].str[:3] 
+        hcc_wt24['number']= hcc_wt24['HCCname'].str.extract('(\d+)')
+        hcc_wt24['HCC']= hcc_wt24['HCCname'].str[4:] 
         
         #limit dataset to community individuals
         #limit the table to only HCCs and not interactions
@@ -129,7 +146,6 @@ def prop24_impact(memberfile):
         'M45_54',
         'M55_59',
         'M60_64',
-        'gSubstanceUseDisorder_gPsych',
         'OriginallyDisabled_Female',
         'OriginallyDisabled_Male']
         
@@ -137,7 +153,7 @@ def prop24_impact(memberfile):
         #limit the table to only HCCs and not demographic 
         hcc_wt24 = hcc_wt24.loc[hcc_wt24 ['HCC'].str.contains("HCC", case=True)]
         #limit dataset to community individuals
-        hcc_wt24= hcc_wt24[hcc_wt24['segments'] == "CNA"]
+        hcc_wt24= hcc_wt24[hcc_wt24['segments'] == segment]
         
         hcc_wt24 =hcc_wt24 [pd.to_numeric(hcc_wt24 ['number'], errors='coerce').notnull()]
         
@@ -226,7 +242,8 @@ def prop24_impact(memberfile):
             renal_24        = ['134','135','136','137','138']
             sepsis_24       = ['2']
             arry_24         =['96'] 
-     
+            gsubstanceusedisorder_24 = ['54', '55', '56']
+            gpsychiatric_24   = ['57', '58', '59', '60
             
             for i in range(len(prodf2_24)): # how many rows to review from the list of disease
                 for y in range(len(d1)): # how many heirarchies to traverse
@@ -250,9 +267,11 @@ def prop24_impact(memberfile):
                     cclist24[i].append(1005)
                 if set(cclist24[i]).intersection(set(arry_24)) and set(cclist24[i]).intersection(chf_24):
                     cclist24[i].append(1006)    
-                
-
-            
+                if set(cclist24[i]).intersection(set(gsubstanceusedisorder_24)) and set(cclist24[i]).intersection(gpsychiatric_24):
+                    cclist24[i].append(1007)    
+                #remove duplicate interaction terms
+                list(set(cclist24[i]))
+        
         #    len(list(filter(bool, cclist24)))
                 
             lenlist=[]
@@ -278,12 +297,8 @@ def prop24_impact(memberfile):
                     for z in range(len(raflist24)):
                         if prodf23_24[nocolist24[z]].iloc[x]==  str(key):
                             change +=1
-            #                st.caption(prodf23[ncolist[z]].iloc[x])
-            #                st.caption(str(key))
                             prodf23_24.at[x,raflist24[z]] = np.where( prodf23_24[nocolist24[z]].iloc[x]==  str(key),
                                                            hccva24.get(key),np.nan)
-            
-        #    prodf2.to_csv('D:\Data\CMS HCC V28\prodf23.csv') 
             
        
         
@@ -307,7 +322,7 @@ def prop24_impact(memberfile):
         
         new_title = f'<p style="font-family:sans-serif; color:Black; font-size: 30px;">RAW Cumulative Clinical RAF: {zeq} </p>'
         st.markdown(new_title, unsafe_allow_html=True)
-        st.caption("RAW RAF means RAF is not adjusted for Coding Intensity Factor (CIF), does not include gender, aged/disabled status, and whether a beneficiary lives in the community or in an institution does not account for number of conditions in CMS-HCC RAF Model 24")
+        st.caption("RAW RAF means RAF is not adjusted for Coding Intensity Factor (CIF), does not include gender and does not account for number of conditions in CMS-HCC RAF Model 24")
         new_title = f'<p style="font-family:sans-serif; color:Black; font-size: 30px;">RAW Avg Clinical RAF: {zeq1} </p>'
         st.markdown(new_title, unsafe_allow_html=True)
         st.caption("RAW Avg RAF has same caveats as before. Calculated Average RAF depends on if you uploaded all ICD10s for all members or uploaded a select sample (e.g. only individuals with open RAF gaps) so please interpret carefully.")
@@ -363,6 +378,7 @@ def prop24_impact(memberfile):
         hcc_name24.loc[len(hcc_name24.index)] = ['Interaction: Heart Failure & Kidney', 1004] 
         hcc_name24.loc[len(hcc_name24.index)] = ['Interaction: Chronic Lung Disorder & Cardiorespiratory Failure', 1005] 
         hcc_name24.loc[len(hcc_name24.index)] = ['Interaction: Heart Failure & Specified Heart Arrhythmias', 1006] 
+        hcc_name24.loc[len(hcc_name24.index)] = ['Interaction: Substance Abuse and Mental Health', 1007] 
 
         prodf23_24melt['value']="HCC"+prodf23_24melt['value'].astype(str)
 
@@ -389,8 +405,8 @@ def prop24_impact(memberfile):
 
         interlist=['Interaction: Immune Disorders & Cancer', 'Interaction: Diabetes & Heart Failure', 'Interaction: Heart Failure & Chronic Lung Disease',
         'Interaction: Heart Failure & Kidney', 'Interaction: Chronic Lung Disorder & Cardiorespiratory Failure',
-        'Interaction: Heart Failure & Specified Heart Arrhythmias'] 
-
+        'Interaction: Heart Failure & Specified Heart Arrhythmias','Interaction: Substance Abuse and Mental Health'] 
+        
         blankIndex=[''] * len(matter23)
         matter23.index=blankIndex
         matter23.style.hide_index()
@@ -400,10 +416,8 @@ def prop24_impact(memberfile):
         bhlist23=['Substance Use Disorder, Moderate/Severe, or Substance Use with Complications',
                   'Substance Use with Psychotic Complications','Personality Disorders',
                   'Reactive and Unspecified Psychosis',
-                  'Major Depressive, Bipolar, and Paranoid Disorders']
+                  'Major Depressive, Bipolar, and Paranoid Disorders', 'Interaction: Substance Abuse and Mental Health'] 
 
-#        hcc_name24[hcc_name24['HCC_name_24'].isin(bhlist23)]
-#        hcc_name24[hcc_name24['CC_24']==58.isin(bhlist23)]
         
         blankIndex=[''] * len(matter23)
         matter23.index=blankIndex
@@ -545,8 +559,11 @@ def prop28_impact(memberfile):
             if set(cclist1[i]).intersection(set(chr_lung_v28)) and set(cclist1[i]).intersection(card_resp_fail):
                 cclist1[i].append(2004)
             if set(cclist1[i]).intersection(set(hf_v28)) and set(cclist1[i]).intersection(hcc238):
-                cclist1[i].append(2005)           
-                
+                cclist1[i].append(2005)
+            if set(cclist1[i]).intersection(set(gSubUseDisorder_v28)) and set(cclist1[i]).intersection(gpsychiatric_v28):
+                cclist1[i].append(2006)    
+        list(set(cclist24[i]))        
+                                 
         lenlist=[]
         for i in cclist1:
             catc=set(i)
@@ -563,7 +580,6 @@ def prop28_impact(memberfile):
 #            st.caption(lenofcols)
         prodf3 = pd.DataFrame(cclist1,columns=ncolist)
 
-
         prodf23=prodf2.merge(prodf3,left_index=True, right_index=True)
         
         #Read the HCC_weight mapping
@@ -572,46 +588,28 @@ def prop28_impact(memberfile):
         #Read the ICD10_HCC mapping
         hcc_wtdf=pd.read_excel(hcc_weight,sheet_name='transpose',names=['HCCname', 'RAF'])  
         #create numeric values to represent interaction terms inline with other HCCs
-#        hcc_wtdf['HCCname'].iloc[105:145]
 
+        interdict28={'DIABETES_HF_V28':'HCC2001',
+        'HF_CHR_LUNG_V28': 'HCC2002',
+        'HF_KIDNEY_V28':'HCC2003',
+        'CHR_LUNG_CARD_RESP_FAIL_V28':"HCC2004",
+        'HF_HCC238_V28':"HCC2005",
+        'gSubUseDisorder_gPsych_V28':'HCC2006'
+        }
 
-        conditions = [
-        (hcc_wtdf['HCCname'] == 'CNA_DIABETES_HF_V28'),
-        (hcc_wtdf['HCCname'] == 'CNA_HF_CHR_LUNG_V28'),
-        (hcc_wtdf['HCCname'] == 'CNA_HF_KIDNEY_V28'),
-        (hcc_wtdf['HCCname'] == 'CNA_CHR_LUNG_CARD_RESP_FAIL_V28'),
-        (hcc_wtdf['HCCname'] == 'CNA_HF_HCC238_V28'),
-        ]
-
-        values = ['CNA_HCC2001', 'CNA_HCC2002', 'CNA_HCC2003', 'CNA_HCC2004', 'CNA_HCC2005']
-        hcc_wtdf['HCCname1'] = np.select(conditions, values)
-
-        hcc_wtdf['HCCname2'] = np.where(hcc_wtdf['HCCname1']!= "0", hcc_wtdf['HCCname1'], hcc_wtdf['HCCname'])
-        hcc_wtdf=hcc_wtdf.drop(columns=['HCCname'])
-
-        hcc_wtdf['number']= hcc_wtdf['HCCname2'].str.extract('(\d+)')
-        hcc_wtdf['HCC']= hcc_wtdf['HCCname2'].str[4:] 
-        hcc_wtdf['segments']= hcc_wtdf['HCCname2'].str[:3] 
-#       confirm the interaction terms have been renamed to numerical
-#       hcc_wtdf.iloc[105:145]
-        
-        hcc_wtdf= hcc_wtdf[hcc_wtdf['segments'] == "CNA"]
-        hcc_wtdf['number']= hcc_wtdf['HCCname2'].str.extract('(\d+)')
-#        hcc_wtdf=hcc_wtdf.iloc[15:]
+        for key in interdict28:
+            hcc_wtdf.HCCname= hcc_wtdf.HCCname.str.replace(key, interdict28[key], regex=False)
+               
+        hcc_wtdf['segments']= hcc_wtdf['HCCname'].str[:3] 
+        hcc_wtdf['number']= hcc_wtdf['HCCname'].str.extract('(\d+)')
+        hcc_wtdf['HCC']= hcc_wtdf['HCCname'].str[4:] 
+        hcc_wtdf= hcc_wtdf[hcc_wtdf['segments'] == segment]
         hcc_wtdf = hcc_wtdf[~hcc_wtdf["HCC"].str.contains("V28")]
         hcc_wtdf_1= hcc_wtdf.loc[hcc_wtdf['HCC'].str.contains("HCC", case=True)]
         hcc_wtdf_1=hcc_wtdf_1[pd.to_numeric(hcc_wtdf_1['number'], errors='coerce').notnull()]
         
         #create dictionary with RAF values and the HCCs
         hccva=dict(zip(hcc_wtdf_1.number, hcc_wtdf_1.RAF))
-#        st.caption(hccva)
-        
-        ### need to update the weights
-        #CNA_DIABETES_HF_V28	0.112
-        #CNA_HF_CHR_LUNG_V28	0.078
-        #CNA_HF_KIDNEY_V28	0.176
-        #CNA_CHR_LUNG_CARD_RESP_FAIL_V28	0.254
-        #CNA_HF_HCC238_V28	0.077
         
         change=0
         for key in hccva:
@@ -690,7 +688,6 @@ def prop28_impact(memberfile):
 
         
     prodf23['index1'] = prodf23.index
-#    prodf2melt=pd.melt(prodf23, id_vars ='index1' , value_vars=hcclist)
     prodf2melt=pd.melt(prodf23, id_vars ='index1' , value_vars=ncclistnum)
     prodf2melt['value']="HCC"+prodf2melt['value'].astype(str)
 
@@ -699,7 +696,8 @@ def prop28_impact(memberfile):
     hcc_name.loc[len(hcc_name.index)] = ['Interaction: Heart Failure & Kidney', 2003] 
     hcc_name.loc[len(hcc_name.index)] = ['Interaction: Chronic Lung Disorder & Cardiorespiratory Failure', 2004] 
     hcc_name.loc[len(hcc_name.index)] = ['Interaction: Heart Failure & Specified Heart Arrhythmias', 2005] 
-
+    hcc_name.loc[len(hcc_name24.index)] = ['Interaction: Substance Abuse and Mental Health', 2006] 
+                                 
     hcc_name['C1C']="HCC"+hcc_name['CC'].astype(str)
 
     for i in range(len(prodf2melt)):
@@ -721,7 +719,9 @@ def prop28_impact(memberfile):
 
     interlist=['Interaction: Diabetes & Heart Failure', 'Interaction: Heart Failure & Chronic Lung Disease',
     'Interaction: Heart Failure & Kidney', 'Interaction: Chronic Lung Disorder & Cardiorespiratory Failure',
-    'Interaction: Heart Failure & Specified Heart Arrhythmias'] 
+    'Interaction: Heart Failure & Specified Heart Arrhythmias',
+    'Interaction: Heart Failure & Specified Heart Arrhythmias','Interaction: Substance Abuse and Mental Health'] 
+
     blankIndex=[''] * len(matter)
     matter.index=blankIndex
     matter.style.hide_index()
@@ -733,7 +733,7 @@ def prop28_impact(memberfile):
         'Drug Use Disorder, Mild, Uncomplicated, Except Cannabis', 
         'Alcohol Use Disorder, Moderate/Severe, or Alcohol Use with Specified NonPsychotic Complications',
         'Schizophrenia','Psychosis, Except Schizophrenia', 'Personality Disorders; Anorexia/Bulimia Nervosa','Bipolar Disorders without Psychosis',
-        'Depression, Moderate or Severe, without Psychosis']
+        'Depression, Moderate or Severe, without Psychosis','Interaction: Substance Abuse and Mental Health']
         
     blankIndex=[''] * len(matter)
     matter.index=blankIndex
@@ -763,41 +763,39 @@ if uploaded_file is not None:
     prodfeat = pd.read_excel(uploaded_file, names=['SUBSCRIBER_ID','ICD10'])
     st.caption(prodfeat.columns) 
     prodfeat['ICD10']=prodfeat['ICD10'].str.strip()
- 
 
-#    memberfile=prodfeat
+    if option1 !='':                                 
+        if option=='2023 Model 24':  
+            prodf23=prop24_impact(prodfeat)
 
-    if option=='2023 Model 24':  
-        prodf23=prop24_impact(prodfeat)
+        if option=='Proposed 2024 Model 28':  
+            prodf23_24=prop28_impact(prodfeat)
 
-    if option=='Proposed 2024 Model 28':  
-        prodf23_24=prop28_impact(prodfeat)
+        if option=='Both Models':  
+            prodf23=prop24_impact(prodfeat)
+            prodf23_24=prop28_impact(prodfeat)
 
-    if option=='Both Models':  
-        prodf23=prop24_impact(prodfeat)
-        prodf23_24=prop28_impact(prodfeat)
-
-        new_title = '<p style="font-family:sans-serif; color:Black; font-size: 30px;">Distribution of Number of HCCs in the population based on CMS-HCC RAF Model 24 and Model 28</p>'
-        st.markdown(new_title, unsafe_allow_html=True)
+            new_title = '<p style="font-family:sans-serif; color:Black; font-size: 30px;">Distribution of Number of HCCs in the population based on CMS-HCC RAF Model 24 and Model 28</p>'
+            st.markdown(new_title, unsafe_allow_html=True)
 
 
-        prodfnew = pd.concat([prodf23_24, prodf23], ignore_index=True)
-        prodfnew.Model=prodfnew.Model.astype("category")
-        p=(p9.ggplot(prodfnew) + p9.aes(x="rafcount", fill="Model")  + p9.geom_bar(stat='count', position='dodge')
-        + p9.xlab("Number of HCC conditions") + p9.ylab("Number of beneficiaries")
-        + p9.geom_text(
-            p9.aes(label=p9.after_stat('count')),
-            stat='count',
-            nudge_y=0.125,
-            va='bottom')
-        )
-        
-        st.pyplot(p9.ggplot.draw(p))      
-        st.caption("Same plot as above but without the labels")
-        p=(p9.ggplot(prodfnew) + p9.aes(x="rafcount", fill="Model")  + p9.geom_bar(stat='count', position='dodge')
-        + p9.xlab("Number of HCC conditions") + p9.ylab("Number of beneficiaries")
-        )
-            
-        st.pyplot(p9.ggplot.draw(p))    
-    
-        
+            prodfnew = pd.concat([prodf23_24, prodf23], ignore_index=True)
+            prodfnew.Model=prodfnew.Model.astype("category")
+            p=(p9.ggplot(prodfnew) + p9.aes(x="rafcount", fill="Model")  + p9.geom_bar(stat='count', position='dodge')
+            + p9.xlab("Number of HCC conditions") + p9.ylab("Number of beneficiaries")
+            + p9.geom_text(
+                p9.aes(label=p9.after_stat('count')),
+                stat='count',
+                nudge_y=0.125,
+                va='bottom')
+            )
+
+            st.pyplot(p9.ggplot.draw(p))      
+            st.caption("Same plot as above but without the labels")
+            p=(p9.ggplot(prodfnew) + p9.aes(x="rafcount", fill="Model")  + p9.geom_bar(stat='count', position='dodge')
+            + p9.xlab("Number of HCC conditions") + p9.ylab("Number of beneficiaries")
+            )
+
+            st.pyplot(p9.ggplot.draw(p))    
+
+
