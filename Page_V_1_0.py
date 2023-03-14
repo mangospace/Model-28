@@ -764,19 +764,16 @@ if uploaded_file is not None:
     prodfeat['ICD10']=prodfeat['ICD10'].str.strip()
 
     if option=='2023 Model 24':  
-        st.caption(option1)
         if option1 != 'Select':
             segment= optiondict[option1]
             prodf23=prop24_impact(prodfeat)
 
     if option=='Proposed 2024 Model 28':  
-        st.caption(option1)
         if option1 != 'Select':
             segment= optiondict[option1]
             prodf23_24=prop28_impact(prodfeat)
 
     if option=='Both Models':  
-        st.caption(option1)
         if option1 != 'Select':
             segment= optiondict[option1]
             prodf23=prop24_impact(prodfeat)
