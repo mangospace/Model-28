@@ -24,7 +24,7 @@ st.caption('Made with \u2764\uFE0F @manas8u in Python and Streamlit')
 st.caption('Understand the somewhat \U0001F479 nature of this version')
 st.caption('Please share your feedback and suggestions. DM @manas8u')
 """
-This model will allow you to compare the impact of the CMS RAF Model 28 community dwelling beneficiaries (proposed payment year 2024) compared to Model 24 (payment year 2023).
+This model will allow you to compare the impact of the CMS RAF Model 28 **community dwelling beneficiaries** (proposed payment year 2024) compared to Model 24 (payment year 2023).
 - This model takes time to run. For ~10,000 members, the model can take 2-3 mins. Please do not refresh. 
 - If you are analyzing data on more than 10,000 members I would suggest using one model at a time first.
 - Please ensure that there are only two columns in the member file that you upload. The columns can have any name.
