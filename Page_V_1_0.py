@@ -21,7 +21,7 @@ import requests
 
 st.title('Performance Year 2024 HCC RAF Model Change Impact V0.0')
 st.caption('Made with \u2764\uFE0F @manas8u in Python and Streamlit')
-st.caption('Understand the somewhat \U0001F479 nature of this version')
+st.caption('Understand the somewhat \U0001F479 nature of this version as well as design constrains imposed by Streamlit')
 st.caption('Please share your feedback and suggestions. DM @manas8u')
 """
 This model will allow you to compare the impact of the CMS RAF Model 28 **community dwelling beneficiaries** (proposed payment year 2024) compared to Model 24 (payment year 2023).
@@ -779,17 +779,6 @@ if uploaded_file is not None:
             segment= optiondict[option1]
             prodf23, matter23 =prop24_impact(prodfeat)
             prodf23_24, matter=prop28_impact(prodfeat)
-
-
-            col1, col2= st.columns(2)
-
-            with col1:
-                st.header("Model V 24")
-                st.dataframe(matter23.nlargest(20,"Number of beneficiaries"))
-    
-            with col2:
-                st.header("CMS proposed Model V 28 ")
-                st.dataframe(matter.nlargest(15,"Number of beneficiaries"))
 
             new_title = '<p style="font-family:sans-serif; color:Black; font-size: 30px;">Distribution of Number of HCCs in the population based on CMS-HCC RAF Model 24 and Model 28</p>'
             st.markdown(new_title, unsafe_allow_html=True)
