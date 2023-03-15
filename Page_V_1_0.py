@@ -430,7 +430,7 @@ def prop24_impact(memberfile):
         else:
             st.caption("No Behavioral Health Diagnosis reported in the population")
 
-        return prodf23_24 
+        return prodf23_24 matter23
    
 
 def prop28_impact(memberfile):
@@ -746,7 +746,7 @@ def prop28_impact(memberfile):
     else:
         st.caption("No Behavioral Health Diagnosis reported in the population")
     
-    return prodf23
+    return prodf23 matter
 
 
 if uploaded_file is not None:           
