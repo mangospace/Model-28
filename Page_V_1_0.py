@@ -696,7 +696,7 @@ def prop28_impact(memberfile):
     hcc_name.loc[len(hcc_name.index)] = ['Interaction: Heart Failure & Kidney', 2003] 
     hcc_name.loc[len(hcc_name.index)] = ['Interaction: Chronic Lung Disorder & Cardiorespiratory Failure', 2004] 
     hcc_name.loc[len(hcc_name.index)] = ['Interaction: Heart Failure & Specified Heart Arrhythmias', 2005] 
-    hcc_name.loc[len(hcc_name24.index)] = ['Interaction: Substance Abuse and Mental Health', 2006] 
+    hcc_name.loc[len(hcc_name.index)] = ['Interaction: Substance Abuse and Mental Health', 2006] 
                                  
     hcc_name['C1C']="HCC"+hcc_name['CC'].astype(str)
 
