@@ -777,8 +777,8 @@ if uploaded_file is not None:
     if option=='Both Models':  
         if option1 != 'Select':
             segment= optiondict[option1]
-            prodf23=prop24_impact(prodfeat)
-            prodf23_24=prop28_impact(prodfeat)
+            prodf23, matter23 =prop24_impact(prodfeat)
+            prodf23_24, matter=prop28_impact(prodfeat)
 
 
             col1, col2= st.columns(2)
