@@ -779,6 +779,17 @@ if uploaded_file is not None:
             prodf23=prop24_impact(prodfeat)
             prodf23_24=prop28_impact(prodfeat)
 
+
+            col1, col2= st.columns(2)
+
+            with col1:
+                st.header("Model V 24")
+                st.dataframe(matter23.nlargest(20,"Number of beneficiaries"))
+    
+            with col2:
+                st.header("CMS proposed Model V 28 ")
+                st.dataframe(matter.nlargest(15,"Number of beneficiaries"))
+
             new_title = '<p style="font-family:sans-serif; color:Black; font-size: 30px;">Distribution of Number of HCCs in the population based on CMS-HCC RAF Model 24 and Model 28</p>'
             st.markdown(new_title, unsafe_allow_html=True)
 
