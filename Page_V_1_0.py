@@ -28,6 +28,7 @@ This model will allow you to compare the impact of the CMS RAF Model 28 **commun
 - This model takes time to run. For ~10,000 members, the model can take 2-3 mins. Please do not refresh. 
 - If you are analyzing data on more than 10,000 members I would suggest using one model at a time first.
 - If you need to analyze more than 1 Medicare Advantage segments (e.g. Non Dual, Aged and Partial Benefit Dual Aged), please upload the member file and ICD10 information for different segments one at time (because the models for each population segment are different).
+- If you dont know the Medicare Advantage segments, please use Non Dual, Aged.
 - Please ensure that there are only two columns in the member file that you upload. The columns can have any name.
 - Column 1: Unique patient identifier (please dont share HIPPA protected identifiers) 
 - Column 2: ICD10s that were captured in 2022
