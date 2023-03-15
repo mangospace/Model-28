@@ -561,7 +561,7 @@ def prop28_impact(memberfile):
                 cclist1[i].append(2005)
             if set(cclist1[i]).intersection(set(gSubUseDisorder_v28)) and set(cclist1[i]).intersection(gpsychiatric_v28):
                 cclist1[i].append(2006)    
-        list(set(cclist24[i]))        
+        list(set(cclist[i]))        
                                  
         lenlist=[]
         for i in cclist1:
