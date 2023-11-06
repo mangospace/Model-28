@@ -31,7 +31,7 @@ This model will allow you to compare the impact of the CMS RAF Model 28 **commun
 - If you dont know the Medicare Advantage segments, please use Non Dual, Aged.
 - Please ensure that there are only two columns in the member file that you upload. The columns can have any name.
 - Column 1: Unique patient identifier (please dont share HIPPA protected identifiers) 
-- Column 2: ICD10s that were captured in 2022
+- Column 2: ICD10s that were captured in 2022. ICD10s should be without decimal e.g. I700 (rather than I70.0) or D6878 (rather than D68.78)
 """
     
 uploaded_file = st.file_uploader("Choose a xls or xlxs file")
