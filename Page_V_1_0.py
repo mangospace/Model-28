@@ -24,7 +24,7 @@ st.caption('Made with \u2764\uFE0F @manas8u in Python and Streamlit')
 st.caption('Understand the somewhat \U0001F479 nature of this version as well as design constrains imposed by Streamlit')
 st.caption('Please share your feedback and suggestions. DM @manas8u')
 """
-This model will allow you to compare the impact of the CMS RAF Model 28 **community dwelling beneficiaries** (proposed payment year 2024) compared to Model 24 (payment year 2023).
+This model will allow you to compare the impact of the CMS RAF Model 28 **community dwelling beneficiaries** compared to Model 24 (payment year 2023).
 - This model takes time to run. For ~10,000 members, the model can take 2-3 mins. Please do not refresh. 
 - If you are analyzing data on more than 10,000 members I would suggest using one model at a time first.
 - If you need to analyze more than 1 Medicare Advantage segments (e.g. Non Dual, Aged and Partial Benefit Dual Aged), please upload the member file and ICD10 information for different segments one at time (because the models for each population segment are different).
@@ -38,7 +38,7 @@ uploaded_file = st.file_uploader("Choose a xls or xlxs file")
 
 option = st.selectbox(
     'Which model would you like to run?',
-    ('Select', '2023 Model 24', 'Proposed 2024 Model 28', 'Both Models'))
+    ('Select', '2023 Model 24', 'Model 28', 'Both Models'))
 
 option1 = st.selectbox(
     'Which Medicare Advantage population segment do these members belong to?',
@@ -436,7 +436,7 @@ def prop24_impact(memberfile):
    
 
 def prop28_impact(memberfile):
-    new_title = '<p style="font-family:sans-serif; color:Black; font-size: 30px;">Running CMS-HCC RAF Model 28, Proposed Payment Year 2024</p>'
+    new_title = '<p style="font-family:sans-serif; color:Black; font-size: 30px;">Running CMS-HCC RAF Model 28</p>'
     st.markdown(new_title, unsafe_allow_html=True)
 
     st.caption("Reading HCC names in Model 28.")
@@ -564,14 +564,24 @@ def prop28_impact(memberfile):
             if set(cclist1[i]).intersection(set(gSubUseDisorder_v28)) and set(cclist1[i]).intersection(gpsychiatric_v28):
                 cclist1[i].append(2006)    
                 
-        list(set(cclist1[i]))        
-                                 
         lenlist=[]
+        cclist_a=[]
+        x=0
         for i in cclist1:
+            print(x)
             catc=set(i)
+            catc.discard(np.nan)
+            print(catc)
             lenlist.append(len(catc))
+            print(len(catc))
+            cclist_a.append(list(catc))
+            x+=1
+        print(lenlist)
         lenofcols=max(lenlist)
-        
+        print(f"{lenofcols=}")
+
+
+
         cccollist=[]
         ncolist=[]
         raflist=[]
@@ -580,8 +590,19 @@ def prop28_impact(memberfile):
             raflist.append("RAF_"+str(count))
             ncolist.append("NCC_"+str(count))
 #            st.caption(lenofcols)
-        prodf3 = pd.DataFrame(cclist1,columns=ncolist)
-
+        print(len (cclist1))
+        print(f"{cclist1=}")
+        print(len (ncolist))
+        print(f"{ncolist=}")
+        prodf3_a = pd.DataFrame(cclist_a)
+        prodf3_a = prodf3_a.fillna(value=np.nan)
+        for x in range(len(prodf3_a.axes[1])):
+            print(x)
+            if prodf3_a[x].isnull().all():
+                print(f"{x} All values in the column are NaN")
+                prodf3_a=prodf3_a.drop(x, axis=1)
+        prodf3 = prodf3_a.set_axis(ncolist, axis=1)
+        
         prodf23=prodf2.merge(prodf3,left_index=True, right_index=True)
         
         #Read the HCC_weight mapping
@@ -769,18 +790,18 @@ if uploaded_file is not None:
     if option=='2023 Model 24':  
         if option1 != 'Select':
             segment= optiondict[option1]
-            prodf23=prop24_impact(prodfeat)
+            prodf23_24=prop24_impact(prodfeat)
 
-    if option=='Proposed 2024 Model 28':  
+    if option=='Model 28':  
         if option1 != 'Select':
             segment= optiondict[option1]
-            prodf23_24=prop28_impact(prodfeat)
+            prodf23=prop28_impact(prodfeat)
 
     if option=='Both Models':  
         if option1 != 'Select':
             segment= optiondict[option1]
-            prodf23, matter23 =prop24_impact(prodfeat)
-            prodf23_24, matter=prop28_impact(prodfeat)
+            prodf23_24, matter23 =prop24_impact(prodfeat)
+            prodf23, matter=prop28_impact(prodfeat)
 
             new_title = '<p style="font-family:sans-serif; color:Black; font-size: 30px;">Distribution of Number of HCCs in the population based on CMS-HCC RAF Model 24 and Model 28</p>'
             st.markdown(new_title, unsafe_allow_html=True)
