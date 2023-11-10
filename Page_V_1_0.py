@@ -177,6 +177,7 @@ def prop24_impact(memberfile):
         samplenum=len(prodf1_24)
         prodf2_24 = prodf1_24.pivot_table(index=['SUBSCRIBER_ID', ], columns='idx', 
         values=['ICD10_24','CC_24', 'HCC_name_24'], aggfunc='first')
+        samplenum2=len(prodf2_24)
         prodf2_24= prodf2_24.sort_index(axis=1, level=1)
         prodf2_24.columns = [f'{x}_{y}' for x,y in prodf2_24.columns]
         prodf2_24 = prodf2_24.reset_index()
@@ -318,18 +319,23 @@ def prop24_impact(memberfile):
             for z in range(len(raflist24)):
                 zeq+=prodf23_24[raflist24[z]].sum()
                 numHCCs+=prodf23_24[raflist24[z]].notnull().tolist().count(True)
-            zeq1=round(zeq/samplenum, 3)
+            zeq1=round(zeq/samplenum2, 3)
             zeq=round(zeq,1)
-        
+            avghcc=round(numHCCs/samplenum2,1)
         new_title = f'<p style="font-family:sans-serif; color:Black; font-size: 30px;">RAW Cumulative Clinical RAF: {zeq} </p>'
         st.markdown(new_title, unsafe_allow_html=True)
         st.caption("RAW RAF means RAF is not adjusted for Coding Intensity Factor (CIF), does not include gender and does not account for number of conditions in CMS-HCC RAF Model 24")
         new_title = f'<p style="font-family:sans-serif; color:Black; font-size: 30px;">RAW Avg Clinical RAF: {zeq1} </p>'
         st.markdown(new_title, unsafe_allow_html=True)
         st.caption("RAW Avg RAF has same caveats as before. Calculated Average RAF depends on if you uploaded all ICD10s for all members or uploaded a select sample (e.g. only individuals with open RAF gaps) so please interpret carefully.")
-        new_title = f'<p style="font-family:sans-serif; color:Black; font-size: 30px;">Number of HCCs in the population based on CMS-HCC RAF Model 24: {numHCCs}</p>'
+        new_title = f'<p style="font-family:sans-serif; color:Black; font-size: 30px;">Number of average HCCs in the population based on CMS-HCC RAF Model 24: {avghcc}</p>'
         st.markdown(new_title, unsafe_allow_html=True)
-       
+        st.caption(f"Number of HCCs in the population based on CMS-HCC RAF Model 24: {numHCCs}")
+        new_title = f'<p style="font-family:sans-serif; color:Black; font-size: 30px;"> </p>'
+        st.markdown(new_title, unsafe_allow_html=True)
+        st.caption(f"Number of unique patient with conditions that risk adjust: {samplenum2}")
+
+      
         st.caption("")
         st.caption("")
         st.caption("")
@@ -491,7 +497,7 @@ def prop28_impact(memberfile):
         samplenum=len(prodf1)
     
         prodf2 = prodf1.pivot_table(index=['SUBSCRIBER_ID'], columns='idx', values=['ICD10','CC', 'HCC_name'], aggfunc='first')
-            
+        samplenum2=len(prodf2)    
         #prodf2 = prodf1.pivot_table(index=['CONSISTENT_MEMBER_ID', 'SUBSCRIBER_ID', 'LAST_NAME','FIRST_NAME', 'DOB_DATE',], columns='idx', values=['ICD10','CC', 'HCC_name'], aggfunc='first')
         prodf2= prodf2.sort_index(axis=1, level=1)
         prodf2.columns = [f'{x}_{y}' for x,y in prodf2.columns]
@@ -663,20 +669,22 @@ def prop28_impact(memberfile):
         for z in range(len(raflistnum)):
             zeq28 +=prodf23[raflistnum[z]].sum()
             numHCCs28 +=prodf23[raflistnum[z]].notnull().tolist().count(True)
-        
-    zeq128=round(zeq28/samplenum, 3)
+    zeq128=round(zeq28/samplenum2, 3)
     zeq28=round(zeq28,1)
+    avghcc28=round(numHCCs28/samplenum2,1)
+
     new_title = f'<p style="font-family:sans-serif; color:Black; font-size: 30px;">RAW Cumulative Clinical RAF: {zeq28}</p>'
     st.markdown(new_title, unsafe_allow_html=True)
     st.caption("RAW RAF means RAF is not adjusted for Coding Intensity Factor (CIF), does not include gender, aged/disabled status, and whether a beneficiary lives in the community or in an institution, does not account for number of conditions in CMS-HCC RAF Model 28")
     new_title = f'<p style="font-family:sans-serif; color:Black; font-size: 30px;">RAW Avg Clinical RAF: {zeq128} </p>'
     st.markdown(new_title, unsafe_allow_html=True)
     st.caption("RAW Avg RAF has same caveats as before. Average RAF depends on if you uploaded ICD10s for all members or a select sample (e.g. only individuals with open RAF gaps) so please interpret carefully.")
-
-
-    new_title = f'<p style="font-family:sans-serif; color:Black; font-size: 30px;">Number of HCCs in the population based on CMS-HCC RAF Model 28: {numHCCs28}</p>'
+    new_title = f'<p style="font-family:sans-serif; color:Black; font-size: 30px;">Number of average HCCs in the population based on CMS-HCC RAF Model 28: {avghcc28}</p>'
     st.markdown(new_title, unsafe_allow_html=True)
-
+    st.caption(f"Number of HCCs in the population based on CMS-HCC RAF Model 28: {numHCCs28}")
+    new_title = f'<p style="font-family:sans-serif; color:Black; font-size: 30px;"> </p>'
+    st.markdown(new_title, unsafe_allow_html=True)
+    st.caption(f"Number of unique patient with conditions that risk adjust: {samplenum2}")
 
     prodf23['rafcount']=len(raflistnum)-(prodf23[raflistnum].apply(lambda x: x.isnull().sum(), axis='columns'))
     prodf23['rafcount']= prodf23['rafcount'].astype("category")
@@ -784,7 +792,6 @@ if uploaded_file is not None:
        
     # Can be used wherever a "file-like" object is accepted:
     prodfeat = pd.read_excel(uploaded_file, names=['SUBSCRIBER_ID','ICD10'])
-    st.caption(prodfeat.columns) 
     prodfeat['ICD10']=prodfeat['ICD10'].str.strip()
 
     if option=='2023 Model 24':  
