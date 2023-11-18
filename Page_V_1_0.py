@@ -272,7 +272,9 @@ def prop24_impact(memberfile):
                 if set(cclist24[i]).intersection(set(gsubstanceusedisorder_24)) and set(cclist24[i]).intersection(gpsychiatric_24):
                     cclist24[i].append(1007)    
                 #remove duplicate interaction terms
-#            cclist24=list(set(cclist24))
+            print(cclist24)
+            
+#            =list(set(cclist24))
         
         #    len(list(filter(bool, cclist24)))
                 
@@ -570,7 +572,8 @@ def prop28_impact(memberfile):
                 cclist1[i].append(2005)
             if set(cclist1[i]).intersection(set(gSubUseDisorder_v28)) and set(cclist1[i]).intersection(gpsychiatric_v28):
                 cclist1[i].append(2006)    
-        cclist1=list(set(cclist1))
+        st.write(cclist1)
+#        cclist1=list(set(cclist1))
         lenlist=[]
         cclist_a=[]
         x=0
@@ -588,7 +591,7 @@ def prop28_impact(memberfile):
         print(f"{lenofcols=}")
 
 
-        cclist1=list(set(cclist1))
+#        cclist1=list(set(cclist1))
         cccollist=[]
         ncolist=[]
         raflist=[]
