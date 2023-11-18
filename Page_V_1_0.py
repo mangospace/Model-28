@@ -284,7 +284,8 @@ def prop24_impact(memberfile):
             nocolist24=[]
             for  count in range(lenofcols24):
                 nocolist24.append("NCC24_"+str(count))
-             
+            cclist24=list(set(cclist24))
+            
             prodf3_24 = pd.DataFrame(cclist24,columns=nocolist24)
             prodf23_24=prodf2_24.merge(prodf3_24,left_index=True, right_index=True)
             
@@ -569,7 +570,7 @@ def prop28_impact(memberfile):
                 cclist1[i].append(2005)
             if set(cclist1[i]).intersection(set(gSubUseDisorder_v28)) and set(cclist1[i]).intersection(gpsychiatric_v28):
                 cclist1[i].append(2006)    
-                
+        cclist1=list(set(cclist1))
         lenlist=[]
         cclist_a=[]
         x=0
