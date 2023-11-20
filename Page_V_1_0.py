@@ -35,7 +35,6 @@ This model will allow you to compare the impact of the CMS RAF Model 28 **commun
 """
     
 uploaded_file = st.file_uploader("Choose a xls or xlxs file")
-
 option = st.selectbox(
     'Which model would you like to run?',
     ('Select', '2023 Model 24', 'Model 28', 'Both Models'))
@@ -51,7 +50,6 @@ option1 = st.selectbox(
 "Community PBDual Disabled"
 ))
 
-
 optiondict={
 "Community NonDual Aged":"CNA",
 "Community NonDual Disabled":"CND",
@@ -60,11 +58,6 @@ optiondict={
 "Community PBDual Aged":"CPA",
 "Community PBDual Disabled":"CPD"   
     }
-
-excelSigs = [
-    ('xlsx', b'\x50\x4B\x05\x06', 2, -22, 4),
-    ('xls', b'\x09\x08\x10\x00\x00\x06\x05\x00', 0, 512, 8),  #Saved from Excel
-]
     
 def prop24_impact(memberfile):
     
@@ -272,11 +265,9 @@ def prop24_impact(memberfile):
                 if set(cclist24[i]).intersection(set(gsubstanceusedisorder_24)) and set(cclist24[i]).intersection(gpsychiatric_24):
                     cclist24[i].append(1007)    
                 #remove duplicate interaction terms
-            print(cclist24)
-            
-#            =list(set(cclist24))
+            print(f"{cclist24=}")
+            cclist24 = [list(dict.fromkeys(x)) for x in cclist24 if x != np.nan]
         
-        #    len(list(filter(bool, cclist24)))
                 
             lenlist=[]
             for i in cclist24:
@@ -286,7 +277,6 @@ def prop24_impact(memberfile):
             nocolist24=[]
             for  count in range(lenofcols24):
                 nocolist24.append("NCC24_"+str(count))
-            cclist24=list(set(cclist24))
             
             prodf3_24 = pd.DataFrame(cclist24,columns=nocolist24)
             prodf23_24=prodf2_24.merge(prodf3_24,left_index=True, right_index=True)
@@ -572,23 +562,24 @@ def prop28_impact(memberfile):
                 cclist1[i].append(2005)
             if set(cclist1[i]).intersection(set(gSubUseDisorder_v28)) and set(cclist1[i]).intersection(gpsychiatric_v28):
                 cclist1[i].append(2006)    
-        st.write(cclist1)
+        cclist1 = [list(dict.fromkeys(x)) for x in cclist1 if x != np.nan]
+
 #        cclist1=list(set(cclist1))
         lenlist=[]
         cclist_a=[]
         x=0
         for i in cclist1:
-            print(x)
+#            print(x)
             catc=set(i)
             catc.discard(np.nan)
-            print(catc)
+#            print(catc)
             lenlist.append(len(catc))
-            print(len(catc))
+#            print(len(catc))
             cclist_a.append(list(catc))
             x+=1
-        print(lenlist)
+ #       print(lenlist)
         lenofcols=max(lenlist)
-        print(f"{lenofcols=}")
+ #       print(f"{lenofcols=}")
 
 
 #        cclist1=list(set(cclist1))
@@ -600,14 +591,14 @@ def prop28_impact(memberfile):
             raflist.append("RAF_"+str(count))
             ncolist.append("NCC_"+str(count))
 #            st.caption(lenofcols)
-        print(len (cclist1))
-        print(f"{cclist1=}")
-        print(len (ncolist))
-        print(f"{ncolist=}")
+#        print(len (cclist1))
+#        print(f"{cclist1=}")
+#        print(len (ncolist))
+#        print(f"{ncolist=}")
         prodf3_a = pd.DataFrame(cclist_a)
         prodf3_a = prodf3_a.fillna(value=np.nan)
         for x in range(len(prodf3_a.axes[1])):
-            print(x)
+#            print(x)
             if prodf3_a[x].isnull().all():
                 print(f"{x} All values in the column are NaN")
                 prodf3_a=prodf3_a.drop(x, axis=1)
